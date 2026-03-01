@@ -24,19 +24,5 @@
       <guid>https://xxid3.github.io/post/another_post_test/</guid>
       <description>&lt;p&gt;Just a POST test, Hello!&lt;/p&gt;</description>
     </item>
-    <item>
-      <title>Posttest</title>
-      <link>https://xxid3.github.io/post/posttest/</link>
-      <pubDate>Mon, 16 Feb 2026 13:48:38 +0800</pubDate><author>41935630v@gmail.com (xid3)</author>
-      <guid>https://xxid3.github.io/post/posttest/</guid>
-      <description>&lt;p&gt;Hello world!&lt;/p&gt;</description>
-    </item>
-    <item>
-      <title>Hello Everyone!</title>
-      <link>https://xxid3.github.io/post/a/</link>
-      <pubDate>Sun, 15 Feb 2026 00:00:00 +0000</pubDate><author>41935630v@gmail.com (xid3)</author>
-      <guid>https://xxid3.github.io/post/a/</guid>
-      <description>&lt;p&gt;Hello Everyone!&lt;/p&gt;</description>
-    </item>
   </channel>
 </rss>
